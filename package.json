@@ -1,0 +1,22 @@
+{
+  "name": "skill-hub",
+  "version": "0.1.0",
+  "description": "A personal collection of Agent Skills, one folder per skill.",
+  "keywords": [
+    "pi-package",
+    "agent-skills",
+    "skills"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "skills/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

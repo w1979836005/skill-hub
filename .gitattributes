@@ -1,0 +1,7 @@
+# Skills are executed by agents on Linux/macOS too: keep the working tree LF everywhere
+# so shebang scripts don't break and diffs stay clean.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.zip binary
