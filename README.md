@@ -11,6 +11,7 @@ pi install git:github.com/w1979836005/skill-hub   # 装进 pi
 | 技能 | 一句话 | 依赖 |
 |---|---|---|
 | [`llm-speed-meter`](#llm-speed-meter) | 把含糊的 tok/s 拆成 TTFT / 稳态速率 / chunk 抖动 | Node ≥ 18，零依赖 |
+| [`windows-intranet-service-deploy`](#windows-intranet-service-deploy) | Windows 内网部署：uvicorn + NSSM 开机自启 + 防火墙 + 验证 | PowerShell 5.1+，NSSM（脚本可自动下载） |
 
 ## llm-speed-meter
 
@@ -45,6 +46,37 @@ printf '%s' "$KEY" | node scripts/measure.mjs \
 **正文比正文，绝不总量比总量**，否则等于拿思考速度去比直答速度。
 
 参数全集、单位陷阱、实测踩过的坑 → [SKILL.md](skills/llm-speed-meter/SKILL.md)
+
+## windows-intranet-service-deploy
+
+把 Windows 上的 Python/FastAPI 服务变成内网可访问、开机自启的 Windows 服务。
+覆盖：前台自测 → 防火墙 → NSSM 下载/注册 → 健康检查 → 内网验证 → 日志/升级/卸载/排障。
+
+**用它**：服务只能本机访问 · 重启电脑后服务不会自己起来 · 需要 NSSM + 防火墙一套流程
+**别用**：只临时跑一次、不需要内网访问和开机自启
+
+```powershell
+# 管理员 PowerShell
+cd skills/windows-intranet-service-deploy/scripts
+
+.\install-service.ps1 `
+  -ProjectDir "E:\bug-report" `
+  -ServiceName "BugReport" `
+  -Port 8000 `
+  -ForceReinstall
+
+.\verify.ps1 `
+  -ProjectDir "E:\bug-report" `
+  -ServiceName "BugReport" `
+  -Port 8000
+```
+
+关键约束：`--workers 1`（SQLite / 内存 token / 内存锁不能多 worker）；NSSM 默认 `LocalSystem`，
+没有当前用户的代理环境变量；启停服务需要管理员 PowerShell；`TIME_WAIT` 不是监听。
+
+完整流程、手动命令、排障表 → [SKILL.md](skills/windows-intranet-service-deploy/SKILL.md)
+
+BugReport 实际部署记录 → [references/bugreport.md](skills/windows-intranet-service-deploy/references/bugreport.md)
 
 ## 新增技能
 
